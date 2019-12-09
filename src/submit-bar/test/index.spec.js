@@ -68,9 +68,21 @@ test('decimal-length prop', () => {
       }
     }
   });
-
   expect(wrapper).toMatchSnapshot();
 });
+
+test('decimal-length prop equal to zero', () => {
+  const wrapper = mount(SubmitBar, {
+    context: {
+      props: {
+        price: 111,
+        decimalLength: 0
+      }
+    }
+  });
+  expect(wrapper).toMatchSnapshot();
+});
+
 
 test('suffix-label prop', () => {
   const wrapper = mount(SubmitBar, {
