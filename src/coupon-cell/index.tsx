@@ -21,13 +21,15 @@ export type CouponCellProps = {
 
 const [createComponent, bem, t] = createNamespace('coupon-cell');
 
-function formatValue(props: CouponCellProps) {
+function formatValue(props: CouponCellProps, slots: DefaultSlots) {
   const { coupons, chosenCoupon, currency } = props;
   const coupon = coupons[+chosenCoupon];
 
   if (coupon) {
     const value = coupon.value || coupon.denominations || 0;
-    return `-${currency}${(value / 100).toFixed(2)}`;
+    return slots.default
+      ? slots.default()
+      : `-${currency}${(value / 100).toFixed(2)}`;
   }
 
   return coupons.length === 0 ? t('tips') : t('count', coupons.length);
@@ -42,18 +44,19 @@ function CouponCell(
   const valueClass = props.coupons[+props.chosenCoupon]
     ? 'van-coupon-cell--selected'
     : '';
-  const value = formatValue(props);
+  const value = formatValue(props, slots);
 
   return (
     <Cell
       class={bem()}
-      value={value}
       title={props.title || t('title')}
       border={props.border}
       isLink={props.editable}
       valueClass={valueClass}
       {...inherit(ctx, true)}
-    />
+    >
+      <span>{value}</span>
+    </Cell>
   );
 }
 
@@ -85,4 +88,4 @@ CouponCell.props = {
   },
 };
 
-export default createComponent<CouponCellProps>(CouponCell);
+export default createComponent<CouponCellProps, {}, DefaultSlots>(CouponCell);
